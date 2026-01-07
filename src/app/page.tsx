@@ -13,7 +13,7 @@ import {
 const CustardApp = () => {
   // 🔧 CONFIGURE YOUR API URL HERE
   // Replace with your Railway or Render URL after deployment
-  const API_URL = "http://localhost:4000/api";
+  const API_URL = "https://mke-custard.vercel.app/api";
 
   const [custardStands, setCustardStands] = useState<Record<string, any>[]>([]);
   const [loading, setLoading] = useState(true);
