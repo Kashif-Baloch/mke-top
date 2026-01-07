@@ -13,7 +13,10 @@ import {
 const CustardApp = () => {
   // 🔧 CONFIGURE YOUR API URL HERE
   // Replace with your Railway or Render URL after deployment
-  const API_URL = "https://mke-custard.vercel.app/api";
+  const API_URL =
+    process.env.NODE_ENV === "production"
+      ? "/api"
+      : "http://localhost:3000/api";
 
   const [custardStands, setCustardStands] = useState<Record<string, any>[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,7 +57,7 @@ const CustardApp = () => {
       const data = await response.json();
 
       // Transform API data to match our app format
-      const transformedStands = data.stands.map((stand: any) => {
+      const transformedStands = data.allLocations.map((stand: any) => {
         // Get today's flavor
         const todayFlavor =
           stand.flavors.find((f: any) => f.dayLabel === "today") ||
