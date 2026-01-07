@@ -15,9 +15,9 @@ const CustardApp = () => {
   // Replace with your Railway or Render URL after deployment
   const API_URL = "http://localhost:4000/api";
 
-const [custardStands, setCustardStands] = useState<Record<string, any>[]>([]);
+  const [custardStands, setCustardStands] = useState<Record<string, any>[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [favorites, setFavorites] = useState(["Kopp's - Greenfield"]);
   const [refreshing, setRefreshing] = useState(false);
@@ -54,12 +54,13 @@ const [custardStands, setCustardStands] = useState<Record<string, any>[]>([]);
       const data = await response.json();
 
       // Transform API data to match our app format
-      const transformedStands = data.stands.map((stand : any) => {
+      const transformedStands = data.stands.map((stand: any) => {
         // Get today's flavor
         const todayFlavor =
-          stand.flavors.find((f : any) => f.dayLabel === "today") || stand.flavors[0];
+          stand.flavors.find((f: any) => f.dayLabel === "today") ||
+          stand.flavors[0];
         const tomorrowFlavor = stand.flavors.find(
-          (f : any) => f.dayLabel === "tomorrow"
+          (f: any) => f.dayLabel === "tomorrow"
         );
 
         // Format flavors
@@ -99,7 +100,11 @@ const [custardStands, setCustardStands] = useState<Record<string, any>[]>([]);
       setError(null);
     } catch (err) {
       console.error("Failed to fetch flavors:", err);
-      setError(err.message as any);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
 
       // If first load fails, show sample data
       if (!showRefreshSpinner) {
@@ -131,13 +136,13 @@ const [custardStands, setCustardStands] = useState<Record<string, any>[]>([]);
     fetchFlavors();
   }, []);
 
-  const toggleFavorite = (name : any) => {
+  const toggleFavorite = (name: any) => {
     setFavorites((prev) =>
       prev.includes(name) ? prev.filter((f) => f !== name) : [...prev, name]
     );
   };
 
-  const getStatusColor = (status : any) => {
+  const getStatusColor = (status: any) => {
     if (status.includes("Open")) return "text-green-600 bg-green-50";
     if (status.includes("Closed")) return "text-red-600 bg-red-50";
     return "text-gray-600 bg-gray-50";
@@ -147,7 +152,7 @@ const [custardStands, setCustardStands] = useState<Record<string, any>[]>([]);
     fetchFlavors(true);
   };
 
-  const openWebsite = (url : any) => {
+  const openWebsite = (url: any) => {
     if (url) {
       window.open(url, "_blank");
     }
